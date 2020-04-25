@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+	<script src="jquery-3.5.0.min.js"></script>
+<title>GetJsonFromFirebase</title>
+	 
+</head>
+
+<body>
+	<p id="gets"></p>
+	<p id="contt"></p>
+	<p id="#">After formatting as following :</p>
+	 <table width="500" border="1">
+  <tbody id="box">
+	 
+	   </tbody>
+</table>
+	<button id="con" value="onc">click this button to get data</button>
+</body>
+	 
+	<script>
+		
+		$("#con").click(function(){
+		
+			
+			
+  $.get("https://ducktracker-d95db.firebaseio.com/.json",function(data,status){
+ 
+//	  $("#gets").text("Content of the firebase as following(oringinal struct) :");
+//	  $("#contt").text(JSON.stringify(data));
+	  
+	  
+  
+	 for (var key in data)
+    {
+		
+		for (var key2 in data[key])
+    {
+		 
+		arr['key']=key;
+		arr['time']=key2;
+		arr['x']=data[key][key2]['latitude'];
+		arr['y']=data[key][key2]['longitude'];
+		to.push(arr);
+	}
+		 
+        
+	 
+    }
+	
+ 
+	  
+	  
+	 
+	// console.log(data.latitude);
+    
+  });
+		});
+ 
+ 
+	</script>
+</html>

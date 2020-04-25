@@ -1,0 +1,152 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">   
+<head>  
+<title>Location-ducker</title>  
+<meta charset='utf-8'>
+
+<link rel="stylesheet" href="css/jquery.datatables.min.css" />
+<link rel="stylesheet" href="css/buttons.dataTables.min.css" />
+	<script type="text/javascript" src="FileSaver.min.js" charset="utf-8"></script>
+<style>
+tbody td{
+	text-align: center;
+}
+</style>
+
+</head>
+<!--<body background="1.png">--> 
+
+<h1>Location-ducker</h1>
+	<img src="2.png">
+<table id="example" class="display" role="grid" aria-describedby="example_info">
+	<thead>
+		<tr>
+			<th>Sort</th>
+            <th>PeopleID</th>
+			<th>RecordTime</th>
+			<th>latitude</th>
+			<th>longitude</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		
+	</tbody>
+	<tfoot>
+		<tr>
+			 <th>Sort</th>
+             <th>PeopleID</th>
+			<th>RecordTime</th>
+			<th>latitude</th>
+			<th>longitude</th>
+			 
+		</tr>
+	</tfoot>
+</table>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.datatables.min.js"></script>
+<script src="js/dataTables.buttons.min.js"></script>
+<script src="js/jszip.min.js"></script>
+<script src="js/buttons.html5.min.js"></script>
+<script src="js/buttons.flash.min.js"></script>
+<script src="js/pdfmake.min.js"></script>
+<script src="js/vfs_fonts.js"></script>
+<script src="js/buttons.print.min.js"></script>
+<script>  
+$(document).ready(function(){ 
+	
+   	var to=[];
+	
+  $.ajax({
+        url: "https://ducktracker-d95db.firebaseio.com/.json",
+        type: "GET",
+        dataType: "json",
+	    async : false,
+        success: function (data) {
+ var count=0 
+    for (var key in data)
+    {
+		
+		for (var key2 in data[key])
+    {
+		var arr={};
+       arr['key']=key;
+		arr['time']=key2;
+		arr['x']=data[key][key2]['latitude'];
+		arr['y']=data[key][key2]['longitude'];
+		to.push(arr);
+		 count=count+1;
+		 
+		var html="<tr><td>"+count+"</td><td>"+key+"</td><td>"+key2+"</td><td>"+data[key][key2]['latitude']+"</td><td>"+data[key][key2]['longitude']+"</td></tr>";
+		$("#example tbody").append(html);
+	 
+	} 
+		
+		
+   }  
+        }
+    });
+
+ 
+	
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		language: {  
+			emptyTable: 'without data',  
+			loadingRecords: 'loading...',  
+			processing: 'searching...',  
+			search: 'search:',  
+			lengthMenu: 'page _MENU_ ',  
+			zeroRecords: 'without data',  
+			paginate: {  
+				'first':      'FirstPage',  
+				'last':       'LastPage',  
+				'next':       'Next',  
+				'previous':   'Last'  
+			},  
+			info: ' _PAGE_  / _PAGES_ ',  
+			infoEmpty: 'no data',  
+			infoFiltered: '(Filetered _MAX_ )',
+		},
+		buttons: [
+			{
+				extend: 'copyHtml5',
+			},
+			{
+				extend: 'excelHtml5',
+				title: 'Data export'
+			},
+			{
+				extend: 'pdfHtml5',
+				title: 'Data export'
+			},
+			{
+				extend: 'csvHtml5',
+				title: 'Data export'
+			},
+			 
+			{
+				extend:'print',
+			}
+		]
+	} );
+	
+	$(".buttons-copy").text('Copy');
+	$(".buttons-excel").click(function(){
+        
+		 
+      var content = JSON.stringify(to);
+      var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+      saveAs(blob, "save.json");
+     });
+	$(".buttons-excel").text('ExportToJson');
+	$(".buttons-pdf").text('ExportToPdf');
+	$(".buttons-csv").text('ExportTocsv');
+	$(".buttons-print").text('Print');
+	 
+
+});
+</script>
+
+</body>
+</html>
